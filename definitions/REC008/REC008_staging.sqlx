@@ -1,7 +1,7 @@
 config {
   type: "incremental",
   schema: "DWI_DB",
-  name: "rec008_website_orders2",
+  name: "REC008_website_orders2",
   dependencies: ["REC008_cleanup"]
 }
 
