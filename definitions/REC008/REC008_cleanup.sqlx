@@ -2,5 +2,5 @@ config {
   type: "operations"
 }
 
-DELETE FROM `tough-healer-395417.DWI_DB.rec008_website_orders2`
+DELETE FROM `tough-healer-395417.DWI_DB.REC008_website_orders2`
 WHERE OrderDate >= DATE('2024-06-01')
