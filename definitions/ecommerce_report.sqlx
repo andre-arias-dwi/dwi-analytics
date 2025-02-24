@@ -1,0 +1,19 @@
+SELECT
+  COUNT(DISTINCT user_pseudo_id) AS users,
+  COUNT(DISTINCT CONCAT(session_id, user_pseudo_id)) AS sessions,
+  ${
+      helpers.ecommerceChannels(
+          "last_non_direct_traffic_source.source",
+          "last_non_direct_traffic_source.medium",
+          "landing_page.landing_page_location"
+      )
+  }
+  AS ecommerce_channel
+FROM
+  `tough-healer-395417.superform_outputs_287832387.ga4_sessions`
+WHERE
+  session_date BETWEEN '2024-12-03'
+  AND '2024-12-09'
+GROUP BY
+  ALL
+

@@ -1,0 +1,8 @@
+config {
+  type: "incremental",
+  schema: "DWI_DB",
+  name: "rec008_website_orders2",
+  depends_on: ["REC008_cleanup"]
+}
+
+SELECT * FROM `tough-healer-395417.DWI_DB.stg_REC008`
