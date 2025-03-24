@@ -1,7 +1,6 @@
 --requestor: Tom
 --purpose: get fiscal month ecommerce data for cmlp visitors, split by ecommerce channels (include source/medium for 'Other' channel)
 --output: excel file 2025-03-20_cmlp_sources.xlsx
-
 with
     fiscal_calendar as (
         SELECT
