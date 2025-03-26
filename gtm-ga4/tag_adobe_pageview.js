@@ -13,10 +13,10 @@ function handleAdobePageView(event) {
 
     // Push a custom event to GTM's dataLayer to make Adobe data available to GA4
     window.dataLayer.push({
-      event: 'adobe_page_view',                     // Custom event name used by GTM
-      login_status: user.loginType || 'unknown',    // e.g., 'Hard Logged-In', 'Soft Logged-In'
+      event: 'adobe_page_view',                     // Custom GA4 event name
+      login_status: user.loginType || 'unknown',    // e.g., 'Hard Logged-In', 'Soft Logged-In', 'unidentified'
       user_id: user.customerId || 'unknown',        // Unique customer identifier
-      active_state: user.state || 'unknown',        // US state info for segmentation
+      active_state: user.state || 'unknown',        // US state from state selector
       page_name: page.pageName || 'unknown',        // Optional: enriches GA4 page context
       page_type: page.pageType || 'unknown'
     });
@@ -45,5 +45,3 @@ function handleAdobePageView(event) {
   }
 })();
 //</script>
-
-
