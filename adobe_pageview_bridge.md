@@ -31,11 +31,19 @@ Capture user login state from `adobeDataLayer` and send it to GA4.
 **Fires On:** `adobe_page_view` (Custom Event)  
 **Parameters:**
 
-| Parameter Name  | Variable Used              |
-|------------------|-----------------------------|
-| `login_status`   | `{{DLV - login_status}}`    |
-| `user_id`        | `{{DLV - user_id}}`         |
-| `active_state`   | `{{DLV - active_state}}`    |
+`GT - Settings - adobeDataLayer` - can be used in other custom events that depend on adobeDataLayer
+
+| Parameter Name  | Variable Used              | Description |
+|------------------|-----------------------------|---|
+| `login_status`   | `{{DLV - login_status}}`    | Extracted from `adobe_page_view` |
+| `active_state`   | `{{DLV - active_state}}`    | Extracted from `adobe_page_view` |
+| `page_fragment`  | `{{CJS - Page URL Fragment}}` | Extracts #fragment from URL (existing) |
+| `clp` | `{{JS - CLP}}` | True for closed landing page URLs (existing) |
+| `user_id`        | `{{user id}}`         | Returns user ID from `dataLayer` or cookie (existing) |
+
+`{{DLV - user_id}}` created but not used for now, need to understand how it will affect the user id in GA4.
+
+
 
 ---
 
