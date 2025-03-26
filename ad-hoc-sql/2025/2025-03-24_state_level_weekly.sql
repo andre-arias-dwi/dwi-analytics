@@ -1,5 +1,5 @@
 --requestor: Nicole
---purpose: fiscal weeks for state level data, excluding Excluding newspaper print ads from The New Yorker Magazine, The Wall Street Journal, The NY Times
+--purpose:state test data by fiscal weeks, excluding excluding newspaper print ads from The New Yorker Magazine, The Wall Street Journal, The NY Times
 --output: excel file State_Test_Fiscal_Weeks.xlsx
 
 SELECT
@@ -14,11 +14,9 @@ FROM
   `tough-healer-395417.GA4_reporting.WSJ_state_level_fiscal_weeks_lp`
 WHERE
   customer_status = 'New'
-  AND state_group IN ('Control',
-    'Test')
-  AND NOT REGEXP_CONTAINS(landing_page_location, r"promoCode=(AGPJ001|AGNM002|AGLW001)")
-GROUP BY
-  ALL
+  AND state_group IN ('Control', 'Test')
+  AND NOT REGEXP_CONTAINS(landing_page_location, r"promoCode=(AGPJ001|AGNM002|AGLW001)") --response codes from print ads
+GROUP BY ALL
 ORDER BY
   7 DESC,
   4 DESC,
