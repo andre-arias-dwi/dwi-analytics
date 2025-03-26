@@ -1,9 +1,12 @@
+/* eslint-disable */
+/* global adobeDataLayer, dataLayer */
+
+// NOT USED - adobeDataLayer was loading too late in the page lifecycle
 // Custom JavaScript Variable for GTM
 // Purpose: Extract the user's login status from adobeDataLayer (loginType)
 // Used as a GA4 event parameter: 'login_status'
-// GTM Variable Name: {{CJS - adobeDataLayer - loginType}}
-//Publish date: 2025-03-26 Laithwaites
-function () {
+// GTM Variable Name: {{CJS - adobeDataLayer - loginType}} Laithwaites
+function loginStatus() {
     try {
       var events = window.adobeDataLayer || [];
 
@@ -28,3 +31,4 @@ function () {
       return "unknown"; // Fallback in case of any runtime error
     }
   }
+
