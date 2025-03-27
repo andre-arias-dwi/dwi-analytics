@@ -7,7 +7,7 @@
 Capture user login state from `adobeDataLayer` and send it to GA4 using a custom event.
 
 **📦 Use Case:**  
-`adobeDataLayer` loads after the GA4 config tag fires, so we can’t access user data early in the page lifecycle. This workaround ensures we capture login status for segmentation.
+`adobeDataLayer` loads after the GA4 config tag fires, so we can’t access user data early in the page lifecycle. This workaround ensures we capture login status for segmentation. `dataLayer` does not contain these values anymore.
 
 ---
 
