@@ -1,0 +1,7 @@
+config { 
+  type: "operations"
+  tags: ["internal"]
+}
+
+DELETE FROM `tough-healer-395417.DWI_DB.REC008_website_orders`
+WHERE OrderDate >= DATE('2024-06-01')

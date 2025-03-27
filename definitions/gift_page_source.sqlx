@@ -1,0 +1,92 @@
+config {
+  type: "incremental",
+  schema: "GA4_reporting",
+  name: "gift_page_source",
+    uniqueKey: ["date", "session_id", "transaction_id"],
+  bigquery: {
+    partitionBy: "date",
+    clusterBy: ["session_id"]
+  }
+}
+
+WITH gifts_sessions AS (
+    -- Step 1: Identify sessions where the user visited '/gifts' in both tables
+    SELECT DISTINCT
+        event_date,
+        session_id,
+        user_pseudo_id,
+        'LAW' AS brand -- Add brand column for LAW
+    FROM `tough-healer-395417.superform_outputs_287163560.ga4_events`
+    WHERE page.path = '/gifts'
+      AND event_date BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY) AND DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
+      AND page.hostname = 'www.laithwaites.com'
+      AND geo.country != 'India'
+
+    UNION ALL
+
+    SELECT DISTINCT
+        event_date,
+        session_id,
+        user_pseudo_id,
+        'WSJ' AS brand -- Add brand column for WSJ
+    FROM `tough-healer-395417.superform_outputs_287832387.ga4_events`
+    WHERE page.path = '/gifts'
+      AND event_date BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY) AND DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
+      AND page.hostname = 'www.wsjwine.com'
+      AND geo.country != 'India'
+
+    UNION ALL
+
+        SELECT DISTINCT
+            event_date,
+            session_id,
+            user_pseudo_id,
+            'OSW' AS brand -- Add brand column for WSJ
+        FROM `tough-healer-395417.superform_outputs_425709539.ga4_events`
+        WHERE page.path = '/gifts'
+        AND event_date BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY) AND DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
+        AND page.hostname = 'www.omahasteakswine.com'
+        AND geo.country != 'India'
+
+)
+SELECT
+    g.event_date AS date, -- Partition column
+    g.user_pseudo_id,
+    CONCAT(g.session_id, g.user_pseudo_id) AS session_id, -- Concatenated ID
+    g.brand, -- Brand column from the UNION ALL
+    t.transaction_id,
+    COALESCE(t.purchase_revenue, 0) AS purchase_revenue
+FROM gifts_sessions g
+LEFT JOIN (
+    SELECT
+        event_date,
+        session_id,
+        user_pseudo_id,
+        ecommerce.transaction_id,
+        ecommerce.purchase_revenue
+    FROM `tough-healer-395417.superform_outputs_287163560.ga4_events`
+
+    UNION ALL
+
+    SELECT
+        event_date,
+        session_id,
+        user_pseudo_id,
+        ecommerce.transaction_id,
+        ecommerce.purchase_revenue
+    FROM `tough-healer-395417.superform_outputs_287832387.ga4_events`
+    
+    UNION ALL
+
+    SELECT
+        event_date,
+        session_id,
+        user_pseudo_id,
+        ecommerce.transaction_id,
+        ecommerce.purchase_revenue
+    FROM `tough-healer-395417.superform_outputs_425709539.ga4_events`
+) t
+ON g.session_id = t.session_id
+   AND g.user_pseudo_id = t.user_pseudo_id
+   AND t.transaction_id IS NOT NULL
+   AND t.event_date BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY) AND DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
