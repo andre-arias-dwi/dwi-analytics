@@ -1,5 +1,6 @@
 config { 
   type: "operations"
+  tags: ["internal"]
 }
 
 DELETE FROM `tough-healer-395417.DWI_DB.REC008_website_orders`

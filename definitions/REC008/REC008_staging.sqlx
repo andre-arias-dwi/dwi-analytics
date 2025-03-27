@@ -3,6 +3,7 @@ config {
   schema: "DWI_DB",
   name: "REC008_website_orders",
   dependencies: ["REC008_cleanup"]
+  tags: ["internal"]
 }
 
 SELECT * FROM `tough-healer-395417.DWI_DB.stg_REC008`
