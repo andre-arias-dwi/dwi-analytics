@@ -1,5 +1,5 @@
 config { 
-  type: "operations"
+  type: "operations",
   tags: ["internal"]
 }
 
