@@ -23,6 +23,9 @@ Capture user login state from `adobeDataLayer` and send it to GA4 using a custom
 - Listens for `pageView` events and extracts user data (`loginType`, `state`, `customerId`)
 - Pushes an `adobe_page_view` event to GTM's `dataLayer`
 - Enables GA4 tracking when `adobeDataLayer` loads after Initialization
+- Includes a `pageViewHandled` flag to **prevent duplicate event pushes**
+  - Adobe sometimes pushes multiple `pageViews` objects per page load (confirmed via `console.trace`)
+  - Only the first `pageView` event is used to rigger the GA4 custom event
 
 ---
 
