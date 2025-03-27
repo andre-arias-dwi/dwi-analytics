@@ -13,7 +13,7 @@ with
                 WHEN month_number IN (4, 5, 6) THEN 2
                 WHEN month_number IN (7, 8, 9) THEN 3
                 ELSE 4
-            END AS quarter_number
+            END AS quarter_number --used to sort months in correct order
         FROM
             `tough-healer-395417.fiscal_calendars.FY23-24`
         UNION ALL
@@ -44,12 +44,17 @@ with
             event_name = 'page_view'
             AND geo.country != 'India'
             AND device.web_info.hostname = 'www.wsjwine.com'
-            --AND SAFE.REGEXP_CONTAINS(page.location, r"/cm_template_responsive|/next/sale")
+            /* 
+            --old CMLP filter
+            AND SAFE.REGEXP_CONTAINS(page.location, r"/cm_template_responsive|/next/sale")
+            AND NOT SAFE.REGEXP_CONTAINS(page.location, r"(?i)date=gifting")
+             */
+            --new CMLP filter - includes both old and new cmlp pages
             AND SAFE.REGEXP_CONTAINS (
                 page.location,
                 r"/jsp/offer/cm/us/common/cm_template_responsive.jsp.*date=202\d.*(january|february|march|april|may|june|july|august|september|october|november|december).*|/next/(.*-|)sale"
-            ) --includes both old and new cmlp pages
-            --AND NOT SAFE.REGEXP_CONTAINS(page.location, r"(?i)date=gifting")
+            )
+            
             AND event_date between '2023-08-28' and '2025-03-18'
         UNION ALL
         select DISTINCT
@@ -64,12 +69,17 @@ with
             event_name = 'page_view'
             AND geo.country != 'India'
             AND device.web_info.hostname = 'www.laithwaites.com'
+            /* 
+            --old CMLP filter
             --AND SAFE.REGEXP_CONTAINS(page.location, r"/cm_template_responsive|/next/sale")
+            --AND NOT SAFE.REGEXP_CONTAINS(page.location, r"(?i)date=gifting")
+            */
+            --new CMLP filter - includes both old and new cmlp pages
             AND SAFE.REGEXP_CONTAINS (
                 page.location,
                 r"/jsp/offer/cm/us/common/cm_template_responsive.jsp.*date=202\d.*(january|february|march|april|may|june|july|august|september|october|november|december).*|/next/(.*-|)sale"
-            ) --includes both old and new cmlp pages
-            --AND NOT SAFE.REGEXP_CONTAINS(page.location, r"(?i)date=gifting")
+            )
+            
             AND event_date between '2023-08-28' and '2025-03-18'
     ),
     transactions AS (

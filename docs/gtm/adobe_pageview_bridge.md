@@ -1,4 +1,4 @@
-## 🔧 Implementation: Adobe → GA4 pageView
+# 🔧 Implementation: Adobe → GA4 pageView
 
 **📅 Date Created:** 2025-03-26  
 **🆔 GTM Version ID:** 1107  
@@ -11,13 +11,14 @@ Capture user login state from `adobeDataLayer` and send it to GA4 using a custom
 
 ---
 
-### 1. 🧩 Custom HTML Tag
+## 1. 🧩 Custom HTML Tag
 
 **Tag Name:** `cHTML - pageView – adobeDataLayer → dataLayer`  
 **Trigger:** All Pages – Initialization  
 **Script:** [`tag_adobe_pageview.js`](./gtm-ga4/tag_adobe_pageview.js) (monkey-patches `adobeDataLayer.push`)
 
 **Description:**
+
 - 🐒 Monkey-patches (intercepts) `adobeDataLayer.push`
 - Listens for `pageView` events and extracts user data (`loginType`, `state`, `customerId`)
 - Pushes an `adobe_page_view` event to GTM's `dataLayer`
@@ -25,7 +26,7 @@ Capture user login state from `adobeDataLayer` and send it to GA4 using a custom
 
 ---
 
-### 2. 🎯 GA4 Event Tag
+## 2. 🎯 GA4 Event Tag
 
 **Tag Name:** `GA4 - adobe_page_view`  
 **Fires On:** `adobe_page_view` (Custom Event)  
@@ -42,8 +43,6 @@ Capture user login state from `adobeDataLayer` and send it to GA4 using a custom
 | `user_id`        | `{{user id}}`         | Returns user ID from `dataLayer` or cookie (existing) |
 
 `{{DLV - user_id}}` created but not used for now, need to understand how it will affect the user id in GA4.
-
-
 
 ---
 
