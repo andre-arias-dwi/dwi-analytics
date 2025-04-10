@@ -1,0 +1,7 @@
+config {
+  type: "declaration",
+  database: dataform.projectConfig.defaultDatabase,
+  schema: "superform_outputs_425709539",
+  name: "ga4_sessions_osw",
+  description: "GA4 sessions data for OSW brand"
+}

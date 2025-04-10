@@ -1,0 +1,7 @@
+config {
+  type: "declaration",
+  database: dataform.projectConfig.defaultDatabase,
+  schema: "superform_outputs_287163560",
+  name: "ga4_sessions_law",
+  description: "GA4 sessions data for LAW brand",
+}

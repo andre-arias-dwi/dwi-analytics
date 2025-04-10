@@ -1,0 +1,7 @@
+config {
+  type: "declaration",
+  database: dataform.projectConfig.defaultDatabase,
+  schema: "superform_outputs_358775017",
+  name: "ga4_sessions_tcm",
+  description: "GA4 sessions data for TCM brand"
+}
