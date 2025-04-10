@@ -2,6 +2,6 @@ config {
   type: "declaration",
   database: dataform.projectConfig.defaultDatabase,
   schema: "superform_outputs_391406454",
-  name: "ga4_sessions_ngo",
+  name: "ga4_sessions",
   description: "GA4 sessions data for NGO brand"
 }

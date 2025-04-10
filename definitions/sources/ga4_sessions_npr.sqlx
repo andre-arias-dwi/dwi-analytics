@@ -2,6 +2,6 @@ config {
   type: "declaration",
   database: dataform.projectConfig.defaultDatabase,
   schema: "superform_outputs_373836794",
-  name: "ga4_sessions_npr",
+  name: "ga4_sessions",
   description: "GA4 sessions data for NPR brand"
 }

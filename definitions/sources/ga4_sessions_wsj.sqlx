@@ -2,6 +2,6 @@ config {
   type: "declaration",
   database: dataform.projectConfig.defaultDatabase,
   schema: "superform_outputs_287832387",
-  name: "ga4_sessions_wsj",
+  name: "ga4_sessions",
   description: "GA4 sessions data for WSJ brand"
 }
