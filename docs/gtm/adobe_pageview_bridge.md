@@ -1,13 +1,13 @@
 # 🔧 Implementation: Adobe → GA4 pageView
 
-**📅 Date Created:** 2025-03-26  
-**🆔 GTM Version ID:** 1107  
+**📅 Date Created:** 2025-03-26  (updated on 2025-03-28)
+**🆔 GTM Version ID:** 1107  (updated 1113)
 
 **🎯 Purpose:**  
 Capture user login state from `adobeDataLayer` and send it to GA4 using a custom event.
 
 **📦 Use Case:**  
-`adobeDataLayer` loads after the GA4 config tag fires, so we can’t access user data early in the page lifecycle. This workaround ensures we capture login status for segmentation. `dataLayer` does not contain these values anymore.
+`adobeDataLayer` loads after the GA4 config tag fires, so we can’t access user data early in the page lifecycle. This workaround ensures we capture login status and user metadata for segmentation. `dataLayer`  no longer contains this data.
 
 ---
 
@@ -19,10 +19,18 @@ Capture user login state from `adobeDataLayer` and send it to GA4 using a custom
 
 **Description:**
 
-- 🐒 Monkey-patches (intercepts) `adobeDataLayer.push`
+- 🐒 Monkey-patches (intercepts) `adobeDataLayer.push` to handle late pageView events.
 - Listens for `pageView` events and extracts user data (`loginType`, `state`, `customerId`)
-- Pushes an `adobe_page_view` event to GTM's `dataLayer`
-- Enables GA4 tracking when `adobeDataLayer` loads after Initialization
+- Includes fallback mechanisms to ensure the event is captured reliably, even when timing varies between Adobe and GTM:
+
+  - Existing events are processed during Initialization.
+  - Polling: In edge cases where Adobe loads after both GTM and getState() return nothing, we check every 100ms for up to 2 seconds (20 tries).
+  - `getState()` support: If the Adobe Client Data Layer exposes getState(), we use it to retrieve the most recent pageView object. This is useful when adobeDataLayer.push happened before our code ran (e.g. when loading late in the page).
+
+- Pushes a custom `adobe_page_view` event to GTM's `dataLayer` with the extracted values.
+- Includes a `pageViewHandled` flag to **prevent duplicate event pushes** to the `dataLayer`:
+  - Adobe may push multiple `pageViews` events for the same page load (confirmed via `console.trace`)
+  - Only the first matching `pageView` event is used to trigger the GA4 custom event
 
 ---
 

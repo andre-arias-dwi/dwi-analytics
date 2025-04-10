@@ -2,46 +2,117 @@
 /* global adobeDataLayer, dataLayer */
 
 //<script>
-// Handler function to extract relevant fields from adobeDataLayer's pageView event
+
+// Flag to ensure the pageView is only handled once per page load.
+
+var pageViewHandled = false;
+
+
+ // Handles adobeDataLayer `pageView` event by pushing a new event into GTM's dataLayer.
+ // Extracts user and page details to pass along to GA4.
+
 function handleAdobePageView(event) {
-  if (event && event.event === 'pageView' && event.eventData && event.eventData.user) {
-    var user = event.eventData.user;
-    var page = event.eventData.page || {};
+  if (
+    pageViewHandled ||
+    !event ||
+    event.event !== 'pageView' ||
+    !event.eventData ||
+    !event.eventData.user
+  ) {
+    console.warn('[Bridge] pageView conditions not met or already handled:', event);
+    return;
+  }
 
-    // Fallback to empty array if dataLayer isn't initialized
-    window.dataLayer = window.dataLayer || [];
+  pageViewHandled = true;
 
-    // Push a custom event to GTM's dataLayer to make Adobe data available to GA4
-    window.dataLayer.push({
-      event: 'adobe_page_view',                     // Custom GA4 event name
-      login_status: user.loginType || 'unknown',    // e.g., 'Hard Logged-In', 'Soft Logged-In', 'unidentified'
-      user_id: user.customerId || 'unknown',        // Unique customer identifier
-      active_state: user.state || 'unknown',        // US state from state selector
-      page_name: page.pageName || 'unknown',        // Optional: enriches GA4 page context
-      page_type: page.pageType || 'unknown'
-    });
+  var user = event.eventData.user;
+  var page = event.eventData.page || {};
+
+  window.dataLayer = window.dataLayer || [];
+
+  // Temporary log for debugging during rollout
+  console.log('[Bridge] Pushing adobe_page_view to dataLayer:', {
+    login_status: user.loginType,
+    user_id: user.customerId,
+    state: user.state
+  });
+
+  window.dataLayer.push({
+    event: 'adobe_page_view',
+    login_status: user.loginType || 'unknown',
+    user_id: user.customerId || 'unknown',
+    active_state: user.state || 'unknown',
+    page_name: page.pageName || 'unknown',
+    page_type: page.pageType || 'unknown'
+  });
+}
+
+
+ // Fallback polling in case adobeDataLayer events are delayed.
+ // Polls for the first pageView event if it hasn’t been processed yet.
+ 
+var adlPollAttempts = 0;
+var adlMaxAttempts = 20;
+function adlFallbackPoll() {
+  if (
+    !pageViewHandled &&
+    window.adobeDataLayer &&
+    window.adobeDataLayer[0] &&
+    window.adobeDataLayer[0].event === 'pageView' &&
+    window.adobeDataLayer[0].eventData &&
+    window.adobeDataLayer[0].eventData.user
+  ) {
+    console.log('[Bridge] Fallback: found pageView during polling');
+    handleAdobePageView(window.adobeDataLayer[0]);
+  } else if (!pageViewHandled && adlPollAttempts < adlMaxAttempts) {
+    adlPollAttempts++;
+    setTimeout(adlFallbackPoll, 100);
   }
 }
 
-(function() {
+/**
+ * Initializes the adobeDataLayer bridge by:
+ * - Processing any pre-existing events
+ * - Monkey-patching push()
+ * - Attempting fallback via getState()
+ * - Starting polling as a final fallback
+ */
+(function () {
   try {
-    // Ensure adobeDataLayer is defined to avoid runtime errors
     window.adobeDataLayer = window.adobeDataLayer || [];
 
-    // Process already-pushed events (important if adobeDataLayer is loaded before this script)
-    window.adobeDataLayer.forEach(handleAdobePageView);
+    console.log('[Bridge] adobeDataLayer length on load:', window.adobeDataLayer.length);
+    console.log('[Bridge] Patching adobeDataLayer.push');
 
-    // Monkey-patch adobeDataLayer.push to intercept future pushes
-    // Ensures we don't miss pageView events pushed after Initialization
+    // Process any pre-existing adobeDataLayer events
+    for (var i = 0; i < window.adobeDataLayer.length; i++) {
+      handleAdobePageView(window.adobeDataLayer[i]);
+    }
+
+    // Intercept future pushes
     var originalPush = window.adobeDataLayer.push;
-    window.adobeDataLayer.push = function(event) {
+    window.adobeDataLayer.push = function (event) {
       originalPush.call(this, event);
       handleAdobePageView(event);
     };
 
+    // Try to use getState() if available
+    if (typeof window.adobeDataLayer.getState === 'function') {
+      var state = window.adobeDataLayer.getState();
+      if (state && state.eventData && state.eventData.user) {
+        console.log('[Bridge] Fallback: getState() returned user data');
+        handleAdobePageView({
+          event: 'pageView',
+          eventData: state.eventData
+        });
+      }
+    }
+
+    // Start polling as last resort
+    adlFallbackPoll();
+
   } catch (err) {
-    // Log any unexpected runtime errors to the console for easier debugging
-    console.error('[adobeDataLayer bridge] Error:', err);
+    console.error('[Bridge] Error in adobeDataLayer bridge:', err);
   }
 })();
 //</script>
