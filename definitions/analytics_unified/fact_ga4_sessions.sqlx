@@ -2,7 +2,7 @@
 -- Adds brand label and filters by hostnames and country
 
 config {
-  type: "table",
+  type: "incremental",
   description: "GA4 sessions unioned across all brands, filtered by hostname and enriched with brand.",
   tags: ["fact", "ga4", "sessions"],
   bigquery: {
@@ -11,29 +11,39 @@ config {
   }
 }
 
-${(() => {
-  // Load brand configuration (hostnames, dataset, property_id, etc.)
-  const brands = require("../../includes/brands");
+js {
+  let brands, filters;
+  try {
+    const brandsModule = require("includes/brands");
+    const filtersModule = require("includes/filters");
+    
+    brands = brandsModule.brands || [];
+    filters = filtersModule.filters || {};
+    
+    if (!Array.isArray(brands)) {
+      throw new Error("brands is not an array");
+      
+    }
+  } catch (e) {
+    throw new Error(`Error loading modules: ${e.message}`);
+  }
+}
 
-  return `
-    SELECT * FROM (
-      ${brands.map(b => `
-        -- Pull GA4 sessions for one brand
-        SELECT
-          *,
-          '${b.brand}' AS brand
 
-        -- Use dynamic table reference per brand
-        FROM ${ref(b.sourceDeclarationName)}
 
-        -- Filter by allowed hostnames for this brand
-        WHERE device.web_info.hostname IN (
-          ${b.hostname.map(h => `'${h}'`).join(", ")}
-        )
+SELECT * FROM (
+  ${brands.map(b => `
+    -- Pull GA4 sessions for one brand
+    SELECT
+      *,
+      '${b.brand}' AS brand
 
-        -- Exclude rows based on country (value set via workflow_settings.yaml)
-        AND geo.country != '${dataform.projectConfig.vars.excluded_country}'
-      `).join("UNION ALL")}  -- Generate the UNION ALL SQL string using .map()
+    FROM ${ref(b.dataset, "ga4_sessions")}
+
+    WHERE device.web_info.hostname IN (
+      ${b.hostname.map(h => `'${h}'`).join(", ")}
     )
-  `;
-})()}
+    AND geo.country != 'India'
+    AND session_date >= date_checkpoint
+  `).join("UNION ALL")}
+)

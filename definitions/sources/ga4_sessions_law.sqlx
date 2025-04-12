@@ -3,5 +3,5 @@ config {
   database: dataform.projectConfig.defaultDatabase,
   schema: "superform_outputs_287163560",
   name: "ga4_sessions",
-  description: "GA4 sessions data for LAW brand",
+  description: "GA4 sessions data for LAW brand"
 }

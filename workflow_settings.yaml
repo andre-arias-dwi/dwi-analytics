@@ -4,5 +4,4 @@ defaultDataset: analytics_unified
 defaultAssertionDataset: dataform_assertions
 dataformCoreVersion: 3.0.0
 vars:
-  excluded_country: India
 
