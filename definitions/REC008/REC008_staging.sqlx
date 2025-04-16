@@ -6,4 +6,4 @@ config {
   tags: ["internal"]
 }
 
-SELECT * FROM `tough-healer-395417.DWI_DB.stg_REC008`
+SELECT * FROM `tough-healer-395417.analytics_staging.stg_order_details`
