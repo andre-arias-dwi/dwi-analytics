@@ -1,9 +1,0 @@
-config {
-  type: "incremental",
-  schema: "DWI_DB",
-  name: "REC008_website_orders",
-  dependencies: ["REC008_cleanup"],
-  tags: ["internal"]
-}
-
-SELECT * FROM `tough-healer-395417.analytics_staging.stg_order_details`

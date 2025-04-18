@@ -2,4 +2,4 @@
 
 ---
 
-## [GTM Documentation](./docs/gtm/README.md)
+## [GTM Documentation](./gtm/README.md)

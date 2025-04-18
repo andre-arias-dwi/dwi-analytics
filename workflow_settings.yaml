@@ -1,7 +1,0 @@
-defaultProject: tough-healer-395417
-defaultLocation: US
-defaultDataset: analytics_unified
-defaultAssertionDataset: dataform_assertions
-dataformCoreVersion: 3.0.0
-vars:
-
