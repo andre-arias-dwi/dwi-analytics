@@ -55,7 +55,7 @@ with
                 r"/jsp/offer/cm/us/common/cm_template_responsive.jsp.*date=202\d.*(january|february|march|april|may|june|july|august|september|october|november|december).*|/next/(.*-|)sale"
             )
             
-            AND event_date between '2025-02-22' and '2025-03-28'
+            AND event_date between '2025-03-29' and '2025-04-25'
         UNION ALL
         select DISTINCT
             user_pseudo_id,
@@ -80,7 +80,7 @@ with
                 r"/jsp/offer/cm/us/common/cm_template_responsive.jsp.*date=202\d.*(january|february|march|april|may|june|july|august|september|october|november|december).*|/next/(.*-|)sale"
             )
             
-            AND event_date between '2025-02-22' and '2025-03-28'
+            AND event_date between '2025-03-29' and '2025-04-25'
     ),
     transactions AS (
         SELECT DISTINCT
