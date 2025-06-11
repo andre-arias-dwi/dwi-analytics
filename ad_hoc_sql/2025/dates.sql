@@ -25,15 +25,15 @@ WITH with_channel AS (
         WHEN url_gclid IS NOT NULL
           OR url_wbraid IS NOT NULL
           OR ( 
-          REGEXP_CONTAINS(lnd_source_medium, r'(|_)(google|bing|yahoo)(|_)')
-          AND REGEXP_CONTAINS(lnd_source_medium, r'(|_)(cpc|search.?engine|search|sem)(|_)')
+          REGEXP_CONTAINS(lnd_source_medium, r'(\d|_)(google|bing|yahoo)(\d|_)')
+          AND REGEXP_CONTAINS(lnd_source_medium, r'(\d|_)(cpc|search.?engine|search|sem)(\d|_)')
           )
         THEN 'Paid Search'
 
         -- PAID SOCIAL
         WHEN (
           url_fbclid IS NOT NULL
-          OR REGEXP_CONTAINS(lnd_source_medium, r'(fb|facebook|ig|instagram|paidsocial|meta|paid[-_]?social)(|_)')
+          OR REGEXP_CONTAINS(lnd_source_medium, r'\d(fb|facebook|ig|instagram|paidsocial|meta|paid[-_]?social)(\d|_)')
           )
           AND NOT REGEXP_CONTAINS(lnd_source_medium, r'(referral|organic)')
         THEN 'Paid Social'
@@ -41,7 +41,7 @@ WITH with_channel AS (
         -- DIRECT
         WHEN lnd_source = 'none'
           AND lnd_medium = 'none'
-          AND url_campaign_id IS NULL
+          AND url_dwi_campaign_id IS NULL
         THEN 'Direct'
 
         ELSE 'Other'
