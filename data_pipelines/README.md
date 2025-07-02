@@ -9,4 +9,9 @@ This folder contains the code and documentation for data ingestion pipelines.
 
 ## Native Transfers
 
-Refer to [transfer_configs.md](./transfer_configs.md) for a full list of native transfers (GCS, Facebook, Google Ads, etc.).
+- GA4
+- GoogleAds
+- Google Search Console
+- REC Reports (Internal BI) - Google Storage to BigQuery
+- Meta Ads
+- [Fiscal Calendars](./native_documenation/GCS_fiscal_calendar.md):) - Google Storage to BigQuery
