@@ -14,4 +14,4 @@ This folder contains the code and documentation for data ingestion pipelines.
 - Google Search Console
 - REC Reports (Internal BI) - Google Storage to BigQuery
 - Meta Ads
-- [Fiscal Calendars](./native_documenation/GCS_fiscal_calendar.md):) - Google Storage to BigQuery
+- [Fiscal Calendars](./native_documenation/GCS_fiscal_calendar.md): - Google Storage to BigQuery
