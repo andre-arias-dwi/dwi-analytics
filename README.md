@@ -1,7 +1,10 @@
-# DWI Analytics
+# 📊 DWI Analytics
+
+A centralized documentation hub for tracking and understanding internal data pipelines and Google Tag Manager (GTM) implementations.
 
 ---
 
-## [GTM Documentation](./gtm/README.md)
+## 📁 Documentation Index
 
-## [Data Pipelines Documentation](./data_pipelines/README.md)
+- [📦 Data Pipelines Documentation](./data_pipelines/README.md)
+- [📈 GTM Documentation](./gtm/README.md)

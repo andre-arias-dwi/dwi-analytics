@@ -1,3 +1,4 @@
+
 # 📦 SFTP to GCS Pipeline (REC008 / REC013)
 
 This Cloud Run pipeline fetches daily CSV reports from an SFTP server, optionally cleans them, and uploads both raw and cleaned files to Google Cloud Storage (GCS).
@@ -22,14 +23,16 @@ This Cloud Run pipeline fetches daily CSV reports from an SFTP server, optionall
 - **Secrets**: `SFTP_PASSWORD` stored in Secret Manager and injected as an env var
 - **Directory structure**:
 
-  sftp_to_gcs/
-  ├── main.py              # Entrypoint
-  ├── run_pipeline.py      # Core pipeline logic
-  ├── sftp_utils.py        # SFTP fetch logic
-  ├── gcs_utils.py         # GCS uploader
-  ├── cleaner/rec008.py    # Cleaning function for REC008
-  ├── cleaner/rec013.py    # Cleaning function for REC013
-  └── requirements.txt
+```
+sftp_to_gcs/
+├── main.py              # Entrypoint
+├── run_pipeline.py      # Core pipeline logic
+├── sftp_utils.py        # SFTP fetch logic
+├── gcs_utils.py         # GCS uploader
+├── cleaner/rec008.py    # Cleaning function for REC008
+├── cleaner/rec013.py    # Cleaning function for REC013
+└── requirements.txt
+```
 
 ---
 
@@ -37,7 +40,9 @@ This Cloud Run pipeline fetches daily CSV reports from an SFTP server, optionall
 
 - **Cloud Scheduler** invokes the HTTP endpoint with query param:
 
-  POST [https://your-cloud-run-url?report_id=REC008](https://your-cloud-run-url?report_id=REC008)
+  ```
+  POST https://your-cloud-run-url?report_id=REC008
+  ```
 
 - **Two jobs set up**: one for `REC008`, one for `REC013`
 - Example schedule: `0 9 * * *` (daily at 9AM)
@@ -56,7 +61,7 @@ This Cloud Run pipeline fetches daily CSV reports from an SFTP server, optionall
 
 **Log-based filter:**
 
-```text
+```
 resource.type="cloud_scheduler_job"
 (jsonPayload.status="UNAUTHENTICATED" OR
  jsonPayload.status="PERMISSION_DENIED" OR
@@ -75,7 +80,7 @@ resource.type="cloud_scheduler_job"
 
 **Log-based filter:**
 
-```text
+```
 resource.type="cloud_run_revision"
 textPayload:"[ALERT] report_id=" AND textPayload:"ERROR:"
 ```
