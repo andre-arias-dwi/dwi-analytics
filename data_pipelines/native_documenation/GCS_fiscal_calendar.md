@@ -23,13 +23,16 @@ This workflow ensures that fiscal calendar data is available in daily granularit
 ### 1️⃣ Upload New Fiscal Calendar CSV
 
 - Upload to:
-  ```
-  gs://dwi_data/fiscal_calendars/
-  ```
+
+```bash gs://dwi_data/fiscal_calendars/```
+
 - File naming convention:
-  ```
+
+  ```bash
   FY 2025-26 Fiscal Calendar by Week.csv
+
   ```
+
 - The file must include:
   - `week_start`, `week_end`, `week`, `month`, `fiscal_year`
 - Each row represents one fiscal week.
@@ -56,6 +59,7 @@ This workflow ensures that fiscal calendar data is available in daily granularit
 | Notifications | Email enabled |
 
 **Behavior**:
+
 - Only new files are processed.
 - Files already appended are ignored (by design).
 - Source files are retained in GCS.
@@ -68,6 +72,7 @@ This workflow ensures that fiscal calendar data is available in daily granularit
 **Output Table**: `analytics_unified.dim_fiscal_dates`
 
 **Logic**:
+
 - Reads from `analytics_staging.stg_fiscal_weeks`
 - Uses `GENERATE_DATE_ARRAY` to expand each week into daily rows
 - Adds helper columns:
@@ -77,10 +82,12 @@ This workflow ensures that fiscal calendar data is available in daily granularit
   - Month names and display numbers
 
 **Partitioning**:
+
 - Partitioned by `date`
 - Clustered by `fiscal_year`, `fiscal_week_number`
 
 **Run Frequency**:
+
 - Daily (via Dataform schedule)
 
 ---
@@ -92,10 +99,13 @@ If the fiscal calendar is uploaded **after** the fiscal year starts:
 - The incremental model will **not backfill past dates** automatically.
 - This results in missing fiscal dimensions for past events.
 
-### ✅ Solution:
+### ✅ Solution
+
 1. Temporarily hardcode:
+
    ```sql
    SET date_checkpoint = DATE('YYYY-MM-DD'); -- e.g., '2024-06-28'
    ```
+
 2. Re-run `dim_fiscal_dates` to backfill
 3. Restore original logic afterward
