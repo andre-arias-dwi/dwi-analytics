@@ -1,5 +1,7 @@
-flask
-paramiko
-pandas
-google-cloud-storage
-google-cloud-bigquery
+flask                  # Needed for HTTP trigger
+paramiko               # For SFTP
+pandas                 # For data cleaning
+requests               # For external IP check + error reporting
+python-dotenv          # For local dev only (harmless in cloud)
+google-cloud-storage   # To upload to GCS
+google-cloud-bigquery  # ✅ Keep this only if you’ll use BQ later
