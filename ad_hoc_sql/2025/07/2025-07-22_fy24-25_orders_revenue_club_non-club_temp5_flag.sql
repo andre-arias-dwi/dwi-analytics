@@ -6,14 +6,14 @@ WITH temp5_sessions AS (
     AND event_date BETWEEN '2024-06-29' AND '2025-06-27'        -- FY-24-25
   QUALIFY
     -- session saw a Temp 5 offer page         
-    MAX(REGEXP_CONTAINS(page_location, r'/offer_temp5\.jsp'))
+    /**MAX(REGEXP_CONTAINS(page_location, r'/offer_temp5\.jsp'))
         OVER (PARTITION BY session_id)
-    /**AND
+    AND*/
     -- and also hit a CLP checkout page in same session
     MAX(REGEXP_CONTAINS(
           page_location,
           r'/checkout/.*(lp-redirect|confirmation\.jsp)'
-        )) OVER (PARTITION BY session_id)*/
+        )) OVER (PARTITION BY session_id)
 )
 
 SELECT
