@@ -9,8 +9,9 @@ WITH presale_visits AS (
     AND REGEXP_CONTAINS(page_location, r'/newlandingpage/|/offer_temp5\.jsp')
     AND REGEXP_CONTAINS(page_location, r'AGXN003|AGXP003')
   GROUP BY 1,2,3,4
-)
+), 
 
+presale_orders as (
 SELECT
   v.*,
   t.transaction_id,
@@ -22,4 +23,15 @@ LEFT JOIN `analytics_reporting.rpt_ga4_transactions_items`   i
        ON  t.transaction_id = i.transaction_id
        AND i.item_id       = '20200SV'   -- <<< filter lives in ON clause
 WHERE t.transaction_id IS NULL           -- keep all non-buyers
-   OR i.item_id       = '20200SV';       -- keep only Magpie buyers
+   OR i.item_id       = '20200SV'       -- keep only Magpie buyers
+)
+
+select
+brand,
+event_date,
+count(distinct user_pseudo_id) as users,
+count(distinct session_id) as sessions,
+count(distinct transaction_id) as orders,
+sum(purchase_revenue) as revenue
+from presale_orders
+group by all
