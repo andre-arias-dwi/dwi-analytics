@@ -11,10 +11,16 @@ This folder contains the code and documentation for data ingestion pipelines.
 
 ---
 
-## 🔄 Native Transfers
+## 🔄 Dataform
 
 - [Dataform New Property Onboarding (GA, GSC)](./native_docs/new_property_onboarding.md): Steps for onboarding new GA/GSC properties.  
-- [Dataform Repo Documentation](https://github.com/andre-arias-dwi/analytics_unified): Main Dataform repo integrating GA4 exports with internal data.  
+- [Dataform Repo Documentation](https://github.com/andre-arias-dwi/analytics_unified): Main Dataform repo integrating GA4 exports with internal data.
+- [GA Intraday Pipeline - Phase Plan](./native_docs/ga_intraday_plan.md): Phase plans to add intraday freshness to GA models in dataform.
+
+---
+
+## 🔄 BigQuery Data Transfers
+
 - **Google Analytics**: Native BigQuery export for GA4 properties.  
 - **Google Ads**: BigQuery Data Transfer Service for ads campaign data.  
 - **Google Search Console**: Native export integration for search performance data.  
