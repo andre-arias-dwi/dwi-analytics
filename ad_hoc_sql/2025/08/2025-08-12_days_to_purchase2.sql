@@ -40,7 +40,9 @@ WITH
           ga_session_number,
           session_start_timestamp_utc,
           date,
-          lnd_source_medium
+          lnd_source_medium,
+          marketing_category,
+          channel_category 
         )
         ORDER BY ga_session_number ASC, session_start_timestamp_utc ASC, session_id ASC
         LIMIT 1
@@ -52,7 +54,9 @@ WITH
           ga_session_number,
           session_start_timestamp_utc,
           date,
-          lnd_source_medium
+          lnd_source_medium,
+          marketing_category,
+          channel_category          
         )
         ORDER BY session_start_timestamp_utc ASC, ga_session_number ASC, session_id ASC
         LIMIT 1
@@ -83,6 +87,8 @@ WITH
       MIN(s.date)                         AS purchase_date,
       ANY_VALUE(s.ga_session_number)      AS purchase_session_number,
       ANY_VALUE(s.lnd_source_medium)      AS purchase_lnd_source_medium,
+      ANY_VALUE(marketing_category)       AS purchase_marketing_category,
+      ANY_VALUE(channel_category)         AS purchase_channel_category,
       MIN(s.session_start_timestamp_utc)      AS purchase_ts,
       -- revenue can exist on multiple rows of the purchase session → sum it
       SUM(s.purchase_revenue)             AS revenue
@@ -117,13 +123,18 @@ SELECT
   p.purchase_date,
   p.purchase_session_number,
   p.purchase_lnd_source_medium,
+  p.purchase_marketing_category,
+  p.purchase_channel_category,
 
   -- First-session touchpoint (resolved with fallback logic)
   ft.ft.date                    AS first_session_date,
   ft.ft.lnd_source_medium       AS first_session_lnd_source_medium,
+  ft.ft.marketing_category      AS first_session_marketing_category,
+  ft.ft.channel_category        AS first_session_channel_category,
+  
 
   -- Days from first session to purchase session (timestamp-based for accuracy)
-  TIMESTAMP_DIFF(p.purchase_ts, ft.ft.session_start_timestamp_utc, DAY) AS days_to_purchase,
+  DATE_DIFF(p.purchase_date, ft.ft.date  , DAY) AS days_to_purchase,
 
   -- Bounded session count (all sessions up to and including purchase)
   stp.sessions_until_purchase,
