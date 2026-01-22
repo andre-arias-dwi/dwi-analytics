@@ -24,6 +24,8 @@ The design separates responsibilities clearly:
 ## GTM components
 
 ### 1. ACDL → GTM Bridge (Custom HTML tag)
+GTM Tag Name: cHTML - adobeDataLayer events - dataLayer push
+[`tag_adobe_custom_click_events_bridge.js`](./gtm-ga4/tag_adobe_custom_click_events_bridge.js)
 
 **Purpose**  
 Listens for Adobe Client Data Layer events and forwards approved events into GTM.
