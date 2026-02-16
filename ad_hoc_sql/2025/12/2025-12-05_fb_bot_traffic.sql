@@ -9,10 +9,9 @@ WITH session_features AS (
     user_pseudo_id,
     CONCAT(user_pseudo_id, '-', CAST(session_id AS STRING)) AS session_key,
     CASE
-      WHEN LOWER(first_source) LIKE '%facebook%'
-        OR fbclid IS NOT NULL
-        OR LOWER(first_source) LIKE '%audience%'
-        THEN 'Facebook'
+      WHEN LOWER(first_source) = 'fox'
+        AND LOWER(first_medium) = 'website'
+        THEN 'fox / website'
       ELSE 'Other'
     END AS traffic_type,
     LOWER(device_category) AS device_category,
@@ -32,9 +31,8 @@ WITH session_features AS (
     MAX(IF(event_name = 'purchase', 1, 0)) AS has_conversion
   FROM `tough-healer-395417.analytics_unified.fact_ga4_events`
   WHERE
-    brand IN ('WSJ', 'LAW')
-    AND event_date BETWEEN '2025-11-15'
-                       AND DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
+    brand = 'FOX'
+    AND event_date > '2025-07-01'
   GROUP BY event_date, brand, user_pseudo_id, session_key, traffic_type,
            device_category, device_operating_system, country, region, city
 ),
@@ -59,7 +57,6 @@ user_baseline AS (
     AVG(user_sessions) AS avg_user_sessions,
     STDDEV(user_sessions) AS std_user_sessions
   FROM user_daily_activity
-  WHERE session_date < '2025-11-25'
   GROUP BY traffic_type, brand
 ),
 
@@ -86,7 +83,6 @@ baseline AS (
     AVG(pageviews) AS base_mean_pv,
     STDDEV(pageviews) AS base_std_pv
   FROM session_features
-  WHERE session_date < '2025-11-25'
   GROUP BY traffic_type
 ),
 
@@ -102,7 +98,6 @@ daily_baseline AS (
     AVG(sessions) AS avg_sessions,
     STDDEV(sessions) AS std_sessions
   FROM daily
-  WHERE session_date < '2025-11-25'
   GROUP BY traffic_type
 ),
 daily_context AS (
@@ -123,7 +118,6 @@ os_baseline AS (
     SELECT traffic_type, operating_system,
            COUNT(DISTINCT session_key) AS session_count, session_date
     FROM session_features
-    WHERE session_date < '2025-11-25'
     GROUP BY 1,2,4
   )
   GROUP BY 1,2
@@ -148,7 +142,6 @@ device_baseline AS (
     SELECT traffic_type, device_category,
            COUNT(DISTINCT session_key) AS session_count, session_date
     FROM session_features
-    WHERE session_date < '2025-11-25'
     GROUP BY 1,2,4
   )
   GROUP BY 1,2
@@ -173,7 +166,6 @@ geo_baseline AS (
     SELECT traffic_type, city,
            COUNT(DISTINCT session_key) AS session_count, session_date
     FROM session_features
-    WHERE session_date < '2025-11-25'
     GROUP BY 1,2,4
   )
   GROUP BY 1,2
