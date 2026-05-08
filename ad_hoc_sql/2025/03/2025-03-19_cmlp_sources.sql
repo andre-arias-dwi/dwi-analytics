@@ -55,7 +55,7 @@ with
                 r"/jsp/offer/cm/us/common/cm_template_responsive.jsp.*date=202\d.*(january|february|march|april|may|june|july|august|september|october|november|december).*|/next/(.*-|)sale"
             )
             
-            AND event_date between '2025-02-22' and '2025-03-28'
+            AND event_date between '2025-03-29' and '2025-04-25'
         UNION ALL
         select DISTINCT
             user_pseudo_id,
@@ -80,7 +80,7 @@ with
                 r"/jsp/offer/cm/us/common/cm_template_responsive.jsp.*date=202\d.*(january|february|march|april|may|june|july|august|september|october|november|december).*|/next/(.*-|)sale"
             )
             
-            AND event_date between '2025-02-22' and '2025-03-28'
+            AND event_date between '2025-03-29' and '2025-04-25'
     ),
     transactions AS (
         SELECT DISTINCT
@@ -106,7 +106,10 @@ channels AS (
     session_id,
     CASE
         WHEN (last_non_direct_traffic_source.source IS NULL AND last_non_direct_traffic_source.medium IS NULL) OR last_non_direct_traffic_source.medium = 'organic' THEN 'Direct and Organic'
+        
         WHEN last_non_direct_traffic_source.source IN ('bronto', 'adobe', 'curity') THEN 'CM - Email'
+
+        
         WHEN REGEXP_CONTAINS(last_non_direct_traffic_source.source, r'(?i)google|bing|Bing_Shopping|yahoo|\(not set\)|\(unlinked SA360 account\)|ads\.google\.com|Search Traffic|SEM')
         AND REGEXP_CONTAINS(last_non_direct_traffic_source.medium, r'(?i)cpc|Web_SearchEngine|Web_Search Engine|web_search|\(unlinked SA360 account\)|(?i)SEM') THEN 'RM - Paid Search'
         WHEN (REGEXP_CONTAINS(last_non_direct_traffic_source.source, r'(?i)facebook|instagram|paidsocial') OR REGEXP_CONTAINS(last_non_direct_traffic_source.medium, r'(?i)facebook|instagram|paidsocial'))
