@@ -27,7 +27,7 @@ WITH session_flags AS (
       'confirm cancellation'
     )
     AND e.brand IN ('WSJ', 'LAW')
-    AND e.event_date >= '2026-04-01'
+    AND e.event_date >= '2024-07-01'
 
   GROUP BY
     d.fiscal_year_end_year,
