@@ -10,7 +10,7 @@ This workflow ensures that fiscal calendar data is available in daily granularit
 ## Overview
 
 | Step | Description |
-|------|-------------|
+| ------ | ------------- |
 | 1. Upload | Upload a new fiscal year CSV to Cloud Storage |
 | 2. Load | GCS → BigQuery transfer appends data to `stg_fiscal_weeks` |
 | 3. Transform | `dim_fiscal_dates` expands weekly data into daily rows |
@@ -46,7 +46,7 @@ This workflow ensures that fiscal calendar data is available in daily granularit
 **Transfer Config**:
 
 | Field | Value |
-|-------|-------|
+| ------- | ------- |
 | Source | Google Cloud Storage |
 | URI | `gs://dwi_data/fiscal_calendars/*.csv` |
 | Destination Dataset | `analytics_staging` |
